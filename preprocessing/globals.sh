@@ -16,3 +16,5 @@ bids_dir=$data_dir/bids
 raw_dir=$data_dir/dicom #this is where I want the data from conquest to be copied into my study directory 
 defaced_dir=$bids_dir/derivatives/deface #this is where defaced images will end up
 scripts_dir=$project_dir/code/preprocessing #directory with my preprocessing scripts, including this one
+
+scratch_dir=/jukebox/scratch/tachihara/adderzip
