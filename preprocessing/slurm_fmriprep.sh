@@ -42,3 +42,10 @@ echo "Running fMRIPrep on sub-$subj"
 
 echo "Finished running fMRIPrep on sub-$subj"
 date
+
+# Deface post-fmriprep T1w template image
+echo "Defacing preprocessed T1w for sub-$subj"
+
+./deface.sh $subj
+
+echo "Finished defacing T1w"
