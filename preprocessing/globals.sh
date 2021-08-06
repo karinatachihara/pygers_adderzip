@@ -3,10 +3,10 @@
 #module load anacondapy/5.3.1
 
 # 1. Edit wherever the dicoms get transferred on the scanner
-#scanner_dir=/jukebox/dicom/conquest/Skyra-AWP45031/NormaL/2020 #Skyra
+scanner_dir=/jukebox/dicom/conquest/Skyra-AWP45031/NormaL/2020 #Skyra
 #scanner_dir=/jukebox/dicom/conquest/Prisma-MSTZ400D/NormaL/2020 #Prisma
 #scanner_dir=/jukebox/norman/pygers/conquest #Sample project data
-scanner_dir=/jukebox/norman/karina/adderzip_fMRI/adderzip/data/dicom_fakeScanner
+#scanner_dir=/jukebox/norman/karina/adderzip_fMRI/adderzip/data/dicom_fakeScanner
 
 # 2. Edit where your project directory is
 project_dir=/jukebox/norman/karina/adderzip_fMRI/adderzip
