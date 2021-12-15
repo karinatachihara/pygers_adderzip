@@ -4,7 +4,7 @@
 #SBATCH --job-name=mriqc
 
 # Set array to be your subject number
-#SBATCH --array=005,006,007,008
+#SBATCH --array=005,006,007,008,009,010,011,012,013,014,015,016,017,18
 
 # Where to output log files?
 # make sure this logs directory exists!! otherwise the script won't run
