@@ -32,27 +32,27 @@ find $bids_dir/sub-$subj -name "*dup*" -delete
 # # To do this, you add an IntendedFor line to fieldmap json files. We provide an example below,
 # # but keep in mind you need to EDIT THIS FOR YOUR SPECIFIC STUDY (e.g., number of runs, task names, etc.)
 
-# # SESSION 1: list all run filenames
-# beginning='"IntendedFor": ['
-# run1="\""ses-01/func/sub-${subj}_ses-01_task-exposure_run-01_bold.nii.gz"\","
-# run2="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-02_bold.nii.gz"\","
-# run3="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-03_bold.nii.gz"\","
-# run4="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-04_bold.nii.gz"\","
-# run5="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-05_bold.nii.gz"\","
-# run6="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-06_bold.nii.gz"\""
-# run7="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-07_bold.nii.gz"\""
-# run8="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-08_bold.nii.gz"\""
-# run9="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-09_bold.nii.gz"\""
-# run10="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-10_bold.nii.gz"\""
-# run11="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-11_bold.nii.gz"\""
-# run12="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-12_bold.nii.gz"\""
-# end="],"
+# SESSION 1: list all run filenames
+beginning='"IntendedFor": ['
+run1="\""ses-01/func/sub-${subj}_ses-01_task-exposure_run-01_bold.nii.gz"\","
+run2="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-02_bold.nii.gz"\","
+run3="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-03_bold.nii.gz"\","
+run4="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-04_bold.nii.gz"\","
+run5="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-05_bold.nii.gz"\","
+run6="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-06_bold.nii.gz"\""
+run7="\""ses-01/func/sub-${subj}_ses-01_task-learning_run-07_bold.nii.gz"\""
+run8="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-08_bold.nii.gz"\""
+run9="\""ses-01/func/sub-${subj}_ses-01_task-imagine_run-09_bold.nii.gz"\""
+run10="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-10_bold.nii.gz"\""
+run11="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-11_bold.nii.gz"\""
+run12="\""ses-01/func/sub-${subj}_ses-01_task-localizer_run-12_bold.nii.gz"\""
+end="],"
 
-# insert="${beginning}${run1} ${run2} ${run3} ${run4} ${run5} ${run6}${end}"
+insert="${beginning}${run1} ${run2} ${run3} ${run4} ${run5} ${run6}${end}"
 
-# # insert IntendedFor field after line 35 (i.e., it becomes the new line 36)
-# sed -i "35 a \ \ ${insert}" $bids_dir/sub-$subj/ses-01/fmap/sub-${subj}_ses-01_dir-AP_epi.json
-# sed -i "35 a \ \ ${insert}" $bids_dir/sub-$subj/ses-01/fmap/sub-${subj}_ses-01_dir-PA_epi.json
+# insert IntendedFor field after line 35 (i.e., it becomes the new line 36)
+sed -i "35 a \ \ ${insert}" $bids_dir/sub-$subj/ses-01/fmap/sub-${subj}_ses-01_dir-AP_epi.json
+sed -i "35 a \ \ ${insert}" $bids_dir/sub-$subj/ses-01/fmap/sub-${subj}_ses-01_dir-PA_epi.json
 
 # #you don't have session 2 so comment it out
 # # # SESSION 2: list all run filenames
