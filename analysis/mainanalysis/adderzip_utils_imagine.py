@@ -20,7 +20,6 @@ adderzip_TR = 1.5
 adderzip_hrf_lag = 4.5  # In seconds what is the lag between a stimulus onset and the peak bold response
 
 run_names = ['localizer']
-run_order_start = [10]
 n_runs = [3]
 TRs_run = [194,194,194]
 
@@ -43,6 +42,52 @@ def get_MNI152_template(dim_x, dim_y, dim_z):
     dimensions = np.asarray([dim_x, dim_y, dim_z])
     _, MNI_152_template = sim.mask_brain(dimensions)
     return MNI_152_template
+
+# replaced this section with my own code, with imagine and localizer separately
+# def load_adderzip_stim_labels(sub):
+#     """load the stimulus labels for the adderzip data
+#     Parameters 
+#     ----------
+#     sub: string, subject id 
+    
+#     Return
+#     ----------
+#     Stimulus labels for all runs 
+#     """
+#     stim_label = [];
+#     stim_label_allruns = [];
+#     for run in range(1, adderzip_n_runs + 1):
+#         in_file = (adderzip_data_dir + '/behavioral/regressor/' + '%s_ses-00_task-localizer_regressor-noshift-trimmed_run-0%d.mat' % (sub, run))
+#         # Load in data from matlab
+#         stim_label = scipy.io.loadmat(in_file);
+#         stim_label = np.array(stim_label['regressor']);
+#         # Store the data
+#         if run == 1:
+#             stim_label_allruns = stim_label;
+#         else:       
+#             stim_label_allruns = np.hstack((stim_label_allruns, stim_label))
+#     return stim_label_allruns
+
+def load_adderzip_stim_labels_imagine(sub):
+    stim_label = [];
+    stim_label_allruns = [];
+
+    runs = np.array[4,5,8,9]
+    for eachRun in range (3):
+        thisRun = runs(eachRun)
+
+        imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+thisRun+'/imagineInfo_'+sub+'.csv')
+        imagineInfo = csv.reader(imagineInfo)
+        imagineInfo = list(imagineInfo)
+        imagineInfo = imagineInfo[0::]
+        imagineInfo = np.array(imagineInfo)
+
+        if eachRun == 0:
+            stim_label_allruns = imagineInfo
+        else:
+            stim_label_allruns = hp.hstack((stim_label_allruns,stim_label))
+
+    return stim_label_allruns
 
 def load_adderzip_stim_labels_localizer(sub):
     stim_label = [];
