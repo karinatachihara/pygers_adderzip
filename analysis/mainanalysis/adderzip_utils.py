@@ -81,7 +81,7 @@ def load_adderzip_mask(ROI_name, sub):
 def load_adderzip_epi_data(sub, run):
     # Load MRI file (in Nifti format) of one localizer run
     epi_in = (adderzip_bids_dir +  
-              "derivatives/fmriprep/%s/ses-00/func/%s_ses-00_task-localizer_run-0%i_space-T1w_desc-preproc_bold.nii.gz" % (sub,sub,run))
+              "derivatives/fmriprep/%s/ses-01/func/%s_ses-00_task-localizer_run-%i_space-T1w_desc-preproc_bold.nii.gz" % (sub,sub,run))
     epi_data = nib.load(epi_in)
     print("Loading data from %s" % (epi_in))
     return epi_data
@@ -239,13 +239,13 @@ def label2TR(stim_label, num_runs, TR, TRs_run):
             time_idx = run * (events_run) + i
 
             # What is the time stamp
-            time = stim_label[2, time_idx]
+            time = stim_label[6, time_idx]
 
             # What TR does this timepoint refer to?
             TR_idx = int(time / TR) + (run * (TRs_run - 1))
 
-            # Add the condition label to this timepoint
-            stim_label_TR[TR_idx]=stim_label[0, time_idx]
+            # Add the condition label to this timepoint (imCat)
+            stim_label_TR[TR_idx]=stim_label[3, time_idx]
         
     return stim_label_TR
 
