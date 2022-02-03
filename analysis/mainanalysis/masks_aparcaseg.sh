@@ -17,7 +17,6 @@ FIRSTLEVEL_DIR=$DERIV_DIR/firstlevel
 FREESURFER_DIR=$DERIV_DIR/freesurfer/$SUBJ_DIR/mri
 MASK_DIR=$FIRSTLEVEL_DIR/$SUBJ_DIR/masks
 
-T1=$DERIV_DIR/fmriprep/$SUBJ_DIR/anat/${SUBJ_DIR}_desc-preproc_T1w.nii.gz
 BOLD_REF=$DERIV_DIR/fmriprep/$SUBJ_DIR/ses-01/func/${SUBJ_DIR}_ses-01_task-localizer_run-10_space-T1w_boldref.nii.gz
 aPARC=$FREESURFER_DIR/aparc.a2009s+aseg.mgz #parcellation is the cortical ribbon and segmentation are the subcortical volumes
 
