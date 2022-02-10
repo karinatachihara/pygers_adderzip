@@ -8,7 +8,7 @@ module load fsl
 subj=$1
 
 SUBJ_DIR=sub-$subj
-STUDY_DIR=/jukebox/norman/karina/adderzip_fMRI/adderzip/
+STUDY_DIR=/jukebox/norman/karina/adderzip_fMRI/adderzip
 DATA_DIR=$STUDY_DIR/data
 BIDS_DIR=$DATA_DIR/bids
 SCRIPT_DIR=$STUDY_DIR/code/mainanalysis
@@ -43,9 +43,30 @@ mri_convert $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.mgz $MASK_DIR
 # lateral occipito-temporal sulcus (S_oc-temp_lat label L:11161 R:12161)
 # medial occipito-temporal sulcus (S_oc-temp_med_and_Lingual L:11162 R:12162)
 
+#bilateral hippocampus mask
 fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 17 -uthr 17 -bin $MASK_DIR/${SUBJ_DIR}_left_hippo.nii.gz
 fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 53 -uthr 53 -bin $MASK_DIR/${SUBJ_DIR}_right_hippo.nii.gz
 fslmaths $MASK_DIR/${SUBJ_DIR}_left_hippo.nii.gz -add $MASK_DIR/${SUBJ_DIR}_right_hippo.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_hippo.nii.gz
+
+#bilateral occipital temporal mask
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 11121 -uthr 11121 -bin $MASK_DIR/${SUBJ_DIR}_left_oc-temp_lat-fusifor.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 12121 -uthr 12121 -bin $MASK_DIR/${SUBJ_DIR}_right_oc-temp_lat-fusifor.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_left_oc-temp_lat-fusifor.nii.gz -add $MASK_DIR/${SUBJ_DIR}_right_oc-temp_lat-fusifor.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_lat-fusifor.nii.gz
+
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 11123 -uthr 11123 -bin $MASK_DIR/${SUBJ_DIR}_left_oc-temp_med-Parahip.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 12123 -uthr 12123 -bin $MASK_DIR/${SUBJ_DIR}_right_oc-temp_med-Parahip.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_left_oc-temp_med-Parahip.nii.gz -add $MASK_DIR/${SUBJ_DIR}_right_oc-temp_med-Parahip.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_med-Parahip.nii.gz
+
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 11161 -uthr 11161 -bin $MASK_DIR/${SUBJ_DIR}_left_oc-temp_lat.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 12161 -uthr 12161 -bin $MASK_DIR/${SUBJ_DIR}_right_oc-temp_lat.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_left_oc-temp_lat.nii.gz -add $MASK_DIR/${SUBJ_DIR}_right_oc-temp_lat.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_lat.nii.gz
+
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 11162 -uthr 11162 -bin $MASK_DIR/${SUBJ_DIR}_left_oc-temp_med_and_Lingual.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_aparc.a2009s+aseg_CONVERTED2BOLD.nii.gz -thr 12162 -uthr 12162 -bin $MASK_DIR/${SUBJ_DIR}_right_oc-temp_med_and_Lingual.nii.gz
+fslmaths $MASK_DIR/${SUBJ_DIR}_left_oc-temp_med_and_Lingual.nii.gz -add $MASK_DIR/${SUBJ_DIR}_right_oc-temp_med_and_Lingual.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_med_and_Lingual.nii.gz
+
+fslmaths $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_lat-fusifor.nii.gz -add $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_med-Parahip.nii.gz -add $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_lat.nii.gz -add $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp_med_and_Lingual.nii.gz -bin $MASK_DIR/${SUBJ_DIR}_bilateral_oc-temp.nii.gz
+
 
 # Make masks for RSA sanity check (item-specific scene selective areas, and a frontal and sensory control area)
 # calcarine sulcus (S_calcarine label L:11145 R:12145 )
