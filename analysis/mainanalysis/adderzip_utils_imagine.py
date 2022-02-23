@@ -19,9 +19,10 @@ adderzip_all_ROIs = ['ses00brain', 'leftMTL', 'rightMTL', 'bilateral_oc-temp', '
 adderzip_TR = 1.5
 adderzip_hrf_lag = 4.5  # In seconds what is the lag between a stimulus onset and the peak bold response
 
-run_names = ['localizer']
-n_runs = [3]
-TRs_run = [194,194,194]
+run_names = ['imagine']
+run_order_start = [4,8]
+n_runs = [2]
+TRs_run = [159,159,159]
 
 def get_MNI152_template(dim_x, dim_y, dim_z):
     """get MNI152 template used in fmrisim
@@ -74,32 +75,33 @@ def load_adderzip_stim_labels_imagine(sub):
 
     runs = np.array[4,5,8,9]
     for eachRun in range (3):
-        thisRun = runs(eachRun)
+        thisRun = runs[eachRun]
 
         imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+thisRun+'/imagineInfo_'+sub+'.csv')
         imagineInfo = csv.reader(imagineInfo)
         imagineInfo = list(imagineInfo)
-        imagineInfo = imagineInfo[0::]
+        if eachRun == 0:
+            imagineInfo = imagineInfo[0::]
+        else:
+            imagineInfo = imagineInfo[1::]
         imagineInfo = np.array(imagineInfo)
 
+        jitterInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/jitterInfo/'+thisRun+'/jitterInfo_'+sub+'.csv')
+        jitterInfo = csv.reader(jitterInfo)
+        jitterInfo = list(jitterInfo)
         if eachRun == 0:
-            stim_label_allruns = imagineInfo
+            jitterInfo = jitterInfo[0::]
+        else:
+            jitterInfo = jitterInfo[1::]
+        jitterInfo = np.array(jitterInfo)
+        timeInfo = jitterInfo[:,7]
+
+        stim_label = np.hstack((imagineInfo,timeInfo))
+
+        if eachRun == 0:
+            stim_label_allruns = stim_label
         else:
             stim_label_allruns = hp.hstack((stim_label_allruns,stim_label))
-
-    return stim_label_allruns
-
-def load_adderzip_stim_labels_localizer(sub):
-    stim_label = [];
-    stim_label_allruns = [];
-        
-    localizerInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/locInfo/locInfo_'+sub+'.csv')
-    localizerInfo = csv.reader(localizerInfo)
-    localizerInfo = list(localizerInfo)
-    localizerInfo = localizerInfo[0::]
-    localizerInfo = np.array(localizerInfo)
-
-    stim_label_allruns = localizerInfo
 
     return stim_label_allruns
 
@@ -126,7 +128,7 @@ def load_adderzip_mask(ROI_name, sub):
 def load_adderzip_epi_data(sub, run):
     # Load MRI file (in Nifti format) of one localizer run
     epi_in = (adderzip_bids_dir +  
-              "derivatives/fmriprep/%s/ses-00/func/%s_ses-00_task-localizer_run-0%i_space-T1w_desc-preproc_bold.nii.gz" % (sub,sub,run))
+              "derivatives/fmriprep/%s/ses-00/func/%s_ses-00_task-imagine_run-0%i_space-T1w_desc-preproc_bold.nii.gz" % (sub,sub,run))
     epi_data = nib.load(epi_in)
     print("Loading data from %s" % (epi_in))
     return epi_data
@@ -284,13 +286,13 @@ def label2TR(stim_label, num_runs, TR, TRs_run):
             time_idx = run * (events_run) + i
 
             # What is the time stamp
-            time = stim_label[2, time_idx]
+            time = stim_label[6, time_idx]
 
             # What TR does this timepoint refer to?
             TR_idx = int(time / TR) + (run * (TRs_run - 1))
 
             # Add the condition label to this timepoint
-            stim_label_TR[TR_idx]=stim_label[0, time_idx]
+            stim_label_TR[TR_idx]=stim_label[8, time_idx]
         
     return stim_label_TR
 
