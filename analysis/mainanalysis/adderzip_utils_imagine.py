@@ -1,6 +1,7 @@
 import numpy as np 
 import scipy.io
 import nibabel as nib
+import csv
 from nilearn.input_data import NiftiMasker
 from nilearn.masking import compute_epi_mask
 from sklearn import preprocessing
@@ -12,8 +13,8 @@ from copy import deepcopy
 adderzip_dir = '/jukebox/norman/karina/adderzip_fMRI/adderzip/'
 adderzip_bids_dir = '/jukebox/norman/karina/adderzip_fMRI/adderzip/data/bids/'
 
-# constants for the adderzip dataset (localizer)
-adderzip_label_dict = {1: "Faces", 2: "Scenes", 3: "Objects", 0: "Rest"}
+# constants for the adderzip dataset (imagine)
+adderzip_label_dict_imagine = {0: "Scenes", 1: "Faces"}
 adderzip_all_ROIs = ['ses00brain', 'leftMTL', 'rightMTL', 'bilateral_oc-temp', 'bilateral_calcarine', 'bilateral_cuneus', 'bilateral_lingual', 'bilateral_occipital_inferior', 
 'bilateral_occipital_middle', 'bilateral_occipital_superior', 'bilateral_olfactory', 'bilateral_frontal_inf-orbital', 'bilateral_oc-temp_lat-fusifor', 'bilateral_insula']
 adderzip_TR = 1.5
@@ -22,7 +23,7 @@ adderzip_hrf_lag = 4.5  # In seconds what is the lag between a stimulus onset an
 run_names = ['imagine']
 run_order_start = [4,8]
 n_runs = [2]
-TRs_run = [159,159,159]
+TRs_run = [159,159,159,231]
 
 def get_MNI152_template(dim_x, dim_y, dim_z):
     """get MNI152 template used in fmrisim
@@ -73,35 +74,39 @@ def load_adderzip_stim_labels_imagine(sub):
     stim_label = [];
     stim_label_allruns = [];
 
-    runs = np.array[4,5,8,9]
-    for eachRun in range (3):
-        thisRun = runs[eachRun]
+    run_start = run_order_start[1]
 
-        imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+thisRun+'/imagineInfo_'+sub+'.csv')
+    for eachRun in range (run_start, run_start+n_runs[0]):
+        print('run#', eachRun)
+
+        imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+str(eachRun)+'/imagineInfo_'+sub+'.csv')
         imagineInfo = csv.reader(imagineInfo)
         imagineInfo = list(imagineInfo)
-        if eachRun == 0:
-            imagineInfo = imagineInfo[0::]
-        else:
-            imagineInfo = imagineInfo[1::]
+        imagineInfo = imagineInfo[1::]
         imagineInfo = np.array(imagineInfo)
 
-        jitterInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/jitterInfo/'+thisRun+'/jitterInfo_'+sub+'.csv')
+        jitterInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/jitterInfo/'+str(eachRun)+'/jitterInfo_'+sub+'.csv')
         jitterInfo = csv.reader(jitterInfo)
         jitterInfo = list(jitterInfo)
-        if eachRun == 0:
-            jitterInfo = jitterInfo[0::]
-        else:
-            jitterInfo = jitterInfo[1::]
+        jitterInfo = jitterInfo[1::]
         jitterInfo = np.array(jitterInfo)
         timeInfo = jitterInfo[:,7]
+        trialLegnthInfo = jitterInfo[:,6]
 
-        stim_label = np.hstack((imagineInfo,timeInfo))
+        print('imagineInfo', imagineInfo.shape)
+        print('timeInfo', timeInfo.shape)
 
-        if eachRun == 0:
+        stim_label = np.zeros((imagineInfo.shape[0],(imagineInfo.shape[1]+2)))
+        stim_label[:,:imagineInfo.shape[1]] = imagineInfo
+        stim_label[:,imagineInfo.shape[1]] = timeInfo
+        stim_label[:,(imagineInfo.shape[1]+1)] = trialLegnthInfo
+
+        print('stim_label',stim_label.shape)
+
+        if eachRun == run_start:
             stim_label_allruns = stim_label
         else:
-            stim_label_allruns = hp.hstack((stim_label_allruns,stim_label))
+            stim_label_allruns = np.vstack((stim_label_allruns,stim_label))
 
     return stim_label_allruns
 
