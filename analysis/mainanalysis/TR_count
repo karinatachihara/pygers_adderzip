@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 16 15:51:20 2022
+
+@author: Work
+"""
+import csv
+import numpy as np
+
+path  = '/Volumes/norman/karina/adderzip_fMRI/adderzip'
+
+for eachParti in range(5,25):
+    #print(eachParti)
+    
+    partiData = np.zeros((12,4))
+    
+    
+    if eachParti <10: 
+        sub = '00' + str(eachParti)
+    else:
+        sub = '0' + str(eachParti)
+
+    print('sub=',sub)
+    file_name = path + '/data/dicom/check_volumes/'+sub+'_01_index.csv'
+    
+
+    dicomData = open(file_name)
+    dicomData = csv.reader(dicomData)
+    dicomData = list(dicomData)
+    dicomData = dicomData[0::]
+    dicomData = np.array(dicomData)
+    dicomData = np.float64(dicomData)
+
+    if eachParti == 6:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:3,1] = dicomData[0:3,1]
+        newData[3:6,1] = dicomData[5:8,1]
+        newData[6:19,1] = dicomData[12:25,1]
+        dicomData = newData
+        #print(dicomData)
+    
+    if eachParti == 7 or eachParti==10:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:3,1] = dicomData[0:3,1]
+        newData[3:19,1] = dicomData[4:25,1]
+        dicomData = newData
+        #print(dicomData)
+
+    if eachParti == 12:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:3,1] = dicomData[0:3,1]
+        newData[3:4,1] = dicomData[6:7,1]
+        newData[4:19,1] = dicomData[8:23,1]
+        dicomData = newData
+        #print(dicomData)
+
+    if eachParti == 13:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:3,1] = dicomData[0:3,1]
+        newData[3:19,1] = dicomData[5:21,1]
+        dicomData = newData
+        #print(dicomData)
+        
+    if eachParti == 14:
+        continue
+    
+    if eachParti == 17:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:3,1] = dicomData[0:3,1]
+        newData[3:18,1] = dicomData[4:19,1]
+        newData[18,1] = dicomData[20,1]
+        dicomData = newData
+        #print(dicomData)
+
+    if eachParti == 18:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:6,1] = dicomData[0:6,1]
+        newData[6:19,1] = dicomData[8:21,1]
+        dicomData = newData
+        #print(dicomData)
+
+    if eachParti == 21:
+        newData = np.zeros((19,2))
+        newData[:,0] = np.arange(0,19)
+        newData[0:4,1] = dicomData[0:4,1]
+        newData[4:19,1] = dicomData[5:20,1]
+        dicomData = newData
+        print(dicomData)
+    
+    dicomShape = dicomData.shape
+    print(dicomShape)
+    
+    assert dicomShape[0] == 19
+    
+    #first column is run
+    partiData[:,0] = np.arange(1,13)
+    
+    #second column & third columns are beginning and end 
+    #go through each run and calculate
+    
+    #exposure
+    tr_run1 = dicomData[3,1]
+    beg_run1 = 5
+    task_run1 = 168
+    end_run1 = tr_run1 - beg_run1 - task_run1
+    partiData[0,1] = beg_run1
+    partiData[0,2] = task_run1
+    partiData[0,3] = end_run1
+    
+    #forcedChoice
+    #we skip these for now because of variable TR count
+    
+    #imagine
+    for eachRun in range (4):
+        imagine_runs = np.array([4,5,8,9])
+        thisRun = imagine_runs[eachRun]
+        
+        dicomRow = thisRun + 2
+        tr_im = dicomData[dicomRow, 1]
+        
+        beg_im = 5
+        if thisRun != 9:
+            task_im = 144
+        else:
+            task_im = 216
+        end_im = tr_im - beg_im - task_im
+        
+        partiData[thisRun-1,1] = beg_im
+        partiData[thisRun-1,2] = task_im
+        partiData[thisRun-1,3] = end_im
+    
+    #localizer
+    for eachLoc in range(3):
+        loc_runs = np.array([10,11,12])
+        thisLoc = loc_runs[eachLoc]
+        
+        dicomRow = thisLoc+2
+        tr_loc = dicomData[dicomRow,1]
+        
+        beg_loc = 14
+        task_loc = 170
+        end_loc = tr_loc - beg_loc - task_loc
+        
+        partiData[thisLoc-1,1] = beg_loc
+        partiData[thisLoc-1,2] = task_loc
+        partiData[thisLoc-1,3] = end_loc
+        
+    np.savetxt(path+'/data/supanalysis/TR_count/TR_count_'+sub+'.csv', partiData, fmt='%f', delimiter=",", header = 'run,n_beginning,n_task,n_end')
+
+    
+    
+    
+
+        
+        
+    

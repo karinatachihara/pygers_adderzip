@@ -50,8 +50,8 @@ import csv
 #sns.set(style = 'white', context='poster', rc={"lines.linewidth": 2.5})
 
 
-
-subList = np.array([5,6,7,8,9,10,11,12,13,15,17,18,19,20,22,23,24])
+#subList = np.array([5,6,7,8,9,10,11,12,13,15,17,18,19,20,22,23,24])
+subList = np.array([24])
 runList = np.array([10,11,12])
 
 for eachParti in range (len(subList)):

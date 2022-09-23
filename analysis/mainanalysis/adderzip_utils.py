@@ -45,19 +45,21 @@ def get_MNI152_template(dim_x, dim_y, dim_z):
     _, MNI_152_template = sim.mask_brain(dimensions)
     return MNI_152_template
 
-def load_adderzip_stim_labels_localizer(sub):
-    stim_label = [];
-    stim_label_allruns = [];
-        
+def load_adderzip_stim_labels_localizer(sub,run):
+
     localizerInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/locInfo/locInfo_'+sub+'.csv')
     localizerInfo = csv.reader(localizerInfo)
     localizerInfo = list(localizerInfo)
     localizerInfo = localizerInfo[0::]
     localizerInfo = np.array(localizerInfo)
 
-    stim_label_allruns = localizerInfo
+    run_count = run-10
+    start = run_count*90
+    end = start + 90 +1
+    
+    stim_label = localizerInfo[start:end,:]
 
-    return stim_label_allruns
+    return stim_label
 
 def load_adderzip_mask(ROI_name, sub):
     """Load the mask for the adderzip data 

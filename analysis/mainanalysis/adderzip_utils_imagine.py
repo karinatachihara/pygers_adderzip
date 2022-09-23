@@ -70,45 +70,32 @@ def get_MNI152_template(dim_x, dim_y, dim_z):
 #             stim_label_allruns = np.hstack((stim_label_allruns, stim_label))
 #     return stim_label_allruns
 
-def load_adderzip_stim_labels_imagine(sub):
-    stim_label = [];
-    stim_label_allruns = [];
+def load_adderzip_stim_labels_imagine(sub, run):
 
-    run_start = run_order_start[1]
 
-    for eachRun in range (run_start, run_start+n_runs[0]):
-        print('run#', eachRun)
+    imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+str(run)+'/imagineInfo_'+sub+'.csv')
+    imagineInfo = csv.reader(imagineInfo)
+    imagineInfo = list(imagineInfo)
+    imagineInfo = imagineInfo[1::]
+    imagineInfo = np.array(imagineInfo)
 
-        imagineInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/imagineInfo/'+str(eachRun)+'/imagineInfo_'+sub+'.csv')
-        imagineInfo = csv.reader(imagineInfo)
-        imagineInfo = list(imagineInfo)
-        imagineInfo = imagineInfo[1::]
-        imagineInfo = np.array(imagineInfo)
+    jitterInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/jitterInfo/'+str(run)+'/jitterInfo_'+sub+'.csv')
+    jitterInfo = csv.reader(jitterInfo)
+    jitterInfo = list(jitterInfo)
+    jitterInfo = jitterInfo[1::]
+    jitterInfo = np.array(jitterInfo)
+    timeInfo = jitterInfo[:,7]
+    trialLegnthInfo = jitterInfo[:,6]
 
-        jitterInfo = open(adderzip_dir + 'data/behavioral/info_10_15_21/jitterInfo/'+str(eachRun)+'/jitterInfo_'+sub+'.csv')
-        jitterInfo = csv.reader(jitterInfo)
-        jitterInfo = list(jitterInfo)
-        jitterInfo = jitterInfo[1::]
-        jitterInfo = np.array(jitterInfo)
-        timeInfo = jitterInfo[:,7]
-        trialLegnthInfo = jitterInfo[:,6]
+    print('imagineInfo', imagineInfo.shape)
+    print('timeInfo', timeInfo.shape)
 
-        print('imagineInfo', imagineInfo.shape)
-        print('timeInfo', timeInfo.shape)
+    stim_label = np.zeros((imagineInfo.shape[0],(imagineInfo.shape[1]+2)))
+    stim_label[:,:imagineInfo.shape[1]] = imagineInfo
+    stim_label[:,imagineInfo.shape[1]] = timeInfo
+    stim_label[:,(imagineInfo.shape[1]+1)] = trialLegnthInfo
 
-        stim_label = np.zeros((imagineInfo.shape[0],(imagineInfo.shape[1]+2)))
-        stim_label[:,:imagineInfo.shape[1]] = imagineInfo
-        stim_label[:,imagineInfo.shape[1]] = timeInfo
-        stim_label[:,(imagineInfo.shape[1]+1)] = trialLegnthInfo
-
-        print('stim_label',stim_label.shape)
-
-        if eachRun == run_start:
-            stim_label_allruns = stim_label
-        else:
-            stim_label_allruns = np.vstack((stim_label_allruns,stim_label))
-
-    return stim_label_allruns
+    return stim_label
 
 def load_adderzip_mask(ROI_name, sub):
     """Load the mask for the adderzip data 
